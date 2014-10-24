@@ -1,0 +1,4 @@
+# Any binary files
+*.class
+# Any packaged files
+*.jar
