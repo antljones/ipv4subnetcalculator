@@ -5,7 +5,7 @@ public class Subnet {
 	Address BAddr;
 	Address NAddr;
 
-	public Subnet( String addr , String mask ){
+	public Subnet( String addr , String mask ) {
 		BAddr = new Address();
 		NAddr = new Address();
 		
@@ -16,27 +16,27 @@ public class Subnet {
 		calcBroad( tempMask );
 	}
 	
-	private void calcNetAddr( Address addr , Address mask ){
-		Long l = addr.toValue() & mask.toValue();
+	private void calcNetAddr( Address addr , Address mask ) {
+		long l = addr.toValue() & mask.toValue();
 		
 		l &= 0xffffffff;
 		
 		NAddr.setAddress( l );	
 	}
 	
-	public Address getNetAddr(){
+	public Address getNetAddr() {
 		return NAddr;
 	}
 
-	private void calcBroad( Address mask ){
+	private void calcBroad( Address mask ) {
 		String tempAddress[] = getNetAddr().getAddress().split( "\\." );
 		
 		String tempMask[] = mask.getAddress().split( "\\." );
 		
 		String broadcast[] = new String[ 4 ];
 		
-		for ( int i = 0; i < tempAddress.length; i++ ){
-			if ( Integer.parseInt( tempMask[ i ] ) == 255 ){
+		for ( int i = 0; i < tempAddress.length; i++ ) {
+			if ( Integer.parseInt( tempMask[ i ] ) == 255 ) {
 				broadcast[ i ] = tempAddress[ i ];
 			}else{
 				broadcast[ i ] = "" + ( Integer.parseInt( tempAddress[ i ] ) + ( 255 - Integer.parseInt( tempMask[ i ] ) ) );
@@ -52,7 +52,7 @@ public class Subnet {
 		BAddr.setAddress( broadcastAddress );
 	}
 	
-	public Address getBroadAddr(){
+	public Address getBroadAddr() {
 		return BAddr;
 	}
 }

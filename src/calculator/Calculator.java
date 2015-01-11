@@ -22,30 +22,32 @@ public class Calculator extends JApplet{
 	
 	private Container ui;
 	private JTextField addressField;
-	private JComboBox maskBox;
+	private JComboBox<String> maskBox;
 	private JLabel broadcastLabel;
 	private JLabel networkAddressLabel;
 	private JButton calcBtn;
 	
+	private static final String IPV4_FORMAT = "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)";
+
 	private Subnet subnet;
 	
 	private String[] maskEntries;	
 	
-	public void init(){
+	public void init() {
 		ui = getContentPane();
 
 		createMaskEntries();
 		createUI();
 	}
 	
-	private void createUI(){	
+	private void createUI() {	
 		JPanel subnetPanel = new JPanel();
 		
 		Dimension d = new Dimension( 40 , 20 );
 		
 		subnetPanel = new JPanel( new GridLayout( 0 , 1 ) );
 		addressField = new JTextField( 20 );
-		maskBox = new JComboBox( maskEntries );
+		maskBox = new JComboBox<String>( maskEntries );
 		broadcastLabel = new JLabel( "Broadcast Address:" );
 		broadcastLabel.setSize( d );
 		networkAddressLabel = new JLabel( "Network Address:" );
@@ -63,14 +65,13 @@ public class Calculator extends JApplet{
 		ui.setVisible( true );
 	}
 	
-	private void createMaskEntries()
-	{	
+	private void createMaskEntries() {	
 		maskEntries = new String[ 31 ];
 		
-		Long tempAddress = (long) 0x00000000fffffffeL;
+		long tempAddress = (long) 0x00000000fffffffeL;
 		Address tAddress = new Address();
 		
-		for ( int i = 0; i <=30; i++ ){
+		for ( int i = 0; i <=30; i++ ) {
 			tempAddress = tempAddress << 1;
 			tempAddress &= ( long ) 0x00000000ffffffffL;
 			tAddress.setAddress( tempAddress );
@@ -78,77 +79,19 @@ public class Calculator extends JApplet{
 		}
 	}
 	
-	private void setCalcListener()
-	{
-		calcBtn.addActionListener( new ActionListener(){
+	private void setCalcListener() {
+		calcBtn.addActionListener( new ActionListener() {
 
-			@Override
 			public void actionPerformed( ActionEvent event ) {
-				
-				if ( ! validateAddr( addressField.getText() ).equals( "INVALID" ) ){				
-					String[] tempString = maskEntries[ maskBox.getSelectedIndex() ].split( " /" );
-					subnet = new Subnet( addressField.getText(), tempString[ 0 ] );
+				if ( addressField.getText().matches(IPV4_FORMAT) ) {			
+					String[] mask = maskEntries[ maskBox.getSelectedIndex() ].split( " /" );
 					
+					subnet = new Subnet( addressField.getText(), mask[ 0 ] );
 					broadcastLabel.setText( "BroadcastAddress: " + subnet.getBroadAddr().getAddress() );
 					networkAddressLabel.setText( "Network Address: " + subnet.getNetAddr().getAddress() );
 				}
 			}
 		});
 	}
-	
-	private String validateAddr( String inputAddr ){	
-		String isValid = "INVALID";
 
-		if ( checkFormat( inputAddr ) ){	
-			if ( checkCharacters( inputAddr ) ){
-				if ( checkValues( inputAddr ) ){
-					isValid = "VALID";
-				}
-			}
-		}
-		
-		return isValid;
-	}
-	
-	private boolean checkFormat( String inputAddr ){
-		boolean answer = false;
-		
-		if ( inputAddr != "" ){
-			String addressSplit[] = inputAddr.split( "\\." );
-		
-			if ( addressSplit.length == 4 ){
-				answer = true;
-			}
-		}
-		
-		return answer;
-	}
-	
-	private boolean checkCharacters( String inputAddr ){
-		boolean answer = true;
-	
-		for ( int i = 0; i < inputAddr.length(); i++ ){
-			if ( ! Character.isDigit( inputAddr.charAt( i ) ) ){
-				if ( inputAddr.charAt( i ) != '.' ){
-					answer = false;
-				}
-			}		
-		}
-	
-		return answer; 
-	}
-	
-	private boolean checkValues( String address ){
-		boolean answer = true;
-	
-		String addressSplit[] = address.split( "\\." );
-		
-		for ( int i = 0; i < addressSplit.length; i++ ){
-			if ( Integer.parseInt( addressSplit[ i ] ) > 255 ){
-				answer = false;
-			}
-		}
-
-		return answer; 
-	}
 }

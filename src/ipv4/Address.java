@@ -4,56 +4,56 @@ public class Address {
 	
 	private String address;
 	
-	public Address(){}
+	public Address() {}
 	
-	public Address( String address ){
+	public Address( String address ) {
 		setAddress( address );
 	}
 	
-	public String getAddress(){
+	public String getAddress() {
 		return address;
 	}
 	
-	public void setAddress( String address ){	
+	public void setAddress( String address ) {	
 		this.address = address;
 	}
 	
-	public void setAddress( Long addressValue ){
+	public void setAddress( long addressValue ) {
 		this.setAddress( toDottedDecimal( addressValue ) );
 	}
-	
-	public void setAddress( Address address ){
+
+	public void setAddress( Address address ) {
 		this.address = address.getAddress();
 	}
 	  
-	public long toValue(){
+	public long toValue() {
 		long intEndIP = 0;
 		
-		if ( ! address.equals( "INVALID" ) ){	
+		if ( ! address.equals( "INVALID" ) ) {	
 			String ipSplit[] = this.getAddress().split( "\\." );
 			
 			int k = 0;
 			
-			do{
+			do {
 				intEndIP |= Long.parseLong( ipSplit[ k ] );
 
-				if ( k < 3 ){
+				if ( k < 3 ) {
 					intEndIP = intEndIP << 8;
 				}
 				
 				k++;
-			}while( k < 4 );
+			} while( k < 4 );
 			
 			intEndIP &= 0xffffffff;
 			
-		}else{
+		} else {
 			intEndIP = Long.MAX_VALUE;
 		}
 		
 		return intEndIP;
 	}
 	
-	private String toDottedDecimal( long value ){
+	private String toDottedDecimal( long value ) {
 		String host = "";
 			
 		host += ( value >>> 24 ) + "." +
