@@ -2,3 +2,6 @@
 *.class
 # Any packaged files
 *.jar
+
+#binary directory
+bin/
