@@ -2,36 +2,29 @@ package ipv4;
 
 public class Subnet {
 	
-	Address BAddr;
-	Address NAddr;
+	String mask;
+	String broadcastAddress;
+	String networkAddress;
 
-	public Subnet( String addr , String mask ) {
-		BAddr = new Address();
-		NAddr = new Address();
+	public Subnet( String address , String mask ) {
+		this.mask = mask;
 		
-		Address tempAddr = new Address( addr );
-		Address tempMask = new Address( mask );
-		
-		calcNetAddr( tempAddr , tempMask );
-		calcBroad( tempMask );
+		networkAddress = Address.toDottedDecimal( calcNetAddr( Address.toValue(address), Address.toValue(mask) ) );
+		broadcastAddress = calcBroadcastAddr( networkAddress, mask );
 	}
 	
-	private void calcNetAddr( Address addr , Address mask ) {
-		long l = addr.toValue() & mask.toValue();
+	public static long calcNetAddr( long address , long mask ) {
+		long l = address & mask;
 		
 		l &= 0xffffffff;
 		
-		NAddr.setAddress( l );	
-	}
-	
-	public Address getNetAddr() {
-		return NAddr;
+		return l;
 	}
 
-	private void calcBroad( Address mask ) {
-		String tempAddress[] = getNetAddr().getAddress().split( "\\." );
+	private String calcBroadcastAddr( String networkAddress, String mask ) {
+		String tempAddress[] = networkAddress.split( "\\." );
 		
-		String tempMask[] = mask.getAddress().split( "\\." );
+		String tempMask[] = mask.split( "\\." );
 		
 		String broadcast[] = new String[ 4 ];
 		
@@ -41,18 +34,25 @@ public class Subnet {
 			}else{
 				broadcast[ i ] = "" + ( Integer.parseInt( tempAddress[ i ] ) + ( 255 - Integer.parseInt( tempMask[ i ] ) ) );
 			}
-			
-		}	
+		}
 		
 		String broadcastAddress = broadcast[ 0 ] + ".";
 		broadcastAddress += broadcast[ 1 ] + ".";
 		broadcastAddress += broadcast[ 2 ] + ".";
 		broadcastAddress += broadcast[ 3 ];
 		
-		BAddr.setAddress( broadcastAddress );
+		return broadcastAddress;
 	}
 	
-	public Address getBroadAddr() {
-		return BAddr;
+	public String getMask() {
+		return mask;
+	}
+	
+	public String getBroadcastAddr() {
+		return broadcastAddress;
+	}
+	
+	public String getNetworkAddr() {
+		return networkAddress;
 	}
 }

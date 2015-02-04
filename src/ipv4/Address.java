@@ -2,34 +2,18 @@ package ipv4;
 
 public class Address {
 	
-	private String address;
+	private static final String IPV4_FORMAT = "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)";
 	
-	public Address() {}
+	private Address() {}
 	
-	public Address( String address ) {
-		setAddress( address );
-	}
-	
-	public String getAddress() {
-		return address;
-	}
-	
-	public void setAddress( String address ) {	
-		this.address = address;
-	}
-	
-	public void setAddress( long addressValue ) {
-		this.setAddress( toDottedDecimal( addressValue ) );
-	}
-
-	public void setAddress( Address address ) {
-		this.address = address.getAddress();
+	public static boolean isValid(String dottedDecimalAddress ) {
+		return dottedDecimalAddress.matches(IPV4_FORMAT);
 	}
 	  
-	public long toValue() {
+	public static long toValue(String dottedDecimalAddress) {
 		long intEndIP = 0;
 		
-	    String ipSplit[] = this.getAddress().split( "\\." );
+	    String ipSplit[] = dottedDecimalAddress.split( "\\." );
 			
 		int k = 0;
 			
@@ -48,7 +32,7 @@ public class Address {
 		return intEndIP;
 	}
 	
-	private String toDottedDecimal( long value ) {
+	public static String toDottedDecimal( long value ) {
 		return ( value >>> 24 ) + "." +
 				( ( value & 0x0000000000ff0000L ) >>> 16 ) + "." +
 				( ( value & 0x000000000000ff00L ) >>> 8 ) + "." +
