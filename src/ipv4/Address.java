@@ -34,8 +34,8 @@ public class Address {
 	
 	public static String toDottedDecimal( long value ) {
 		return ( value >>> 24 ) + "." +
-				( ( value & 0x0000000000ff0000L ) >>> 16 ) + "." +
-				( ( value & 0x000000000000ff00L ) >>> 8 ) + "." +
-				( value & 0x00000000000000ffL );	
+			   ( ( value & 0x0000000000ff0000L ) >>> 16 ) + "." +
+			   ( ( value & 0x000000000000ff00L ) >>> 8 ) + "." +
+			   ( value & 0x00000000000000ffL );
 	}	
 }

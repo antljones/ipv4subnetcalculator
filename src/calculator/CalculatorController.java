@@ -12,7 +12,6 @@ public class CalculatorController extends JApplet{
 	
 	private static final long serialVersionUID = 1744931474029911081L;
 
-	private Subnet subnet;
 	private String[] maskEntries;
 	private CalculatorView calcView;
 	
@@ -43,9 +42,12 @@ public class CalculatorController extends JApplet{
 				if ( Address.isValid(calcView.getAddressField().getText()) ) {			
 					String[] mask = maskEntries[ calcView.getMaskBox().getSelectedIndex() ].split( " /" );
 					
-					subnet = new Subnet( calcView.getAddressField().getText(), mask[ 0 ] );
-					calcView.getBroadcastAddressLabel().setText( "BroadcastAddress: " + subnet.getBroadcastAddr() );
-					calcView.getNetworkAddressLabel().setText( "Network Address: " + subnet.getNetworkAddr() );
+					String address = calcView.getAddressField().getText();
+					long addrVal = Address.toValue(address);
+					long maskVal = Address.toValue(mask[0]);
+					calcView.getNetworkAddressLabel().setText( "Network Address: " + Address.toDottedDecimal(Subnet.calcNetAddr(addrVal, maskVal) ) );
+					calcView.getBroadcastAddressLabel().setText( "BroadcastAddress: " + Address.toDottedDecimal(Subnet.calcBroadcastAddr(addrVal, maskVal)));
+					Subnet.calcBroadcastAddr(addrVal, maskVal);
 				}
 			}
 		});
