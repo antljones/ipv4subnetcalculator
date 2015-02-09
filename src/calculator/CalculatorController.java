@@ -41,13 +41,14 @@ public class CalculatorController extends JApplet{
 			public void actionPerformed( ActionEvent event ) {
 				if ( Address.isValid(calcView.getAddressField().getText()) ) {			
 					String[] mask = maskEntries[ calcView.getMaskBox().getSelectedIndex() ].split( " /" );
-					
 					String address = calcView.getAddressField().getText();
+					
 					long addrVal = Address.toValue(address);
 					long maskVal = Address.toValue(mask[0]);
+					
+					calcView.getAvailableAddressAmountLabel().setText( "Available Addresses:" + Subnet.calcAvailableAddressAmount( addrVal, maskVal ) );
 					calcView.getNetworkAddressLabel().setText( "Network Address: " + Address.toDottedDecimal(Subnet.calcNetAddr(addrVal, maskVal) ) );
 					calcView.getBroadcastAddressLabel().setText( "BroadcastAddress: " + Address.toDottedDecimal(Subnet.calcBroadcastAddr(addrVal, maskVal)));
-					Subnet.calcBroadcastAddr(addrVal, maskVal);
 				}
 			}
 		});
