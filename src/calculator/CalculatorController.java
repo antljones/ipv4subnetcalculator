@@ -3,21 +3,17 @@ package calculator;
 import ipv4.Address;
 import ipv4.Subnet;
 
+import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JApplet;
-
-public class CalculatorController extends JApplet{
-	
-	private static final long serialVersionUID = 1744931474029911081L;
+public class CalculatorController {
 
 	private String[] maskEntries;
 	private CalculatorView calcView;
 	
-	
-	public void init() {
-		this.calcView = new CalculatorView(this.getContentPane(),createMaskEntries());
+	public CalculatorController(Container contentPane) {
+		this.calcView = new CalculatorView(contentPane,createMaskEntries());
 		setCalcListener();
 	}
 	
